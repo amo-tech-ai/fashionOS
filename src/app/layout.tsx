@@ -37,7 +37,7 @@ import {
   IconSettings,
   IconLogout,
   IconBrandTabler
-} from '@tabler/icons-react';
+} from '@tabler/icons';
 
 export default function RootLayout({
   children,

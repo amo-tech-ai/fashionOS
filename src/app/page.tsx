@@ -24,7 +24,7 @@ import {
   IconTrendingUp,
   IconTicket,
   IconBuildingStore
-} from "@tabler/icons-react";
+} from "@tabler/icons";
 import Link from "next/link";
 import { useList } from "@refinedev/core";
 
