@@ -29,7 +29,7 @@
     "@refinedev/react-table": "^5.6.6",
     "@refinedev/supabase": "^5.7.4",
     "@supabase/ssr": "^0.3.0",
-    "@tabler/icons": "^3.34.0",
+    "@supabase/supabase-js": "^2.51.0",
     "@tabler/icons-react": "^3.34.0",
     "@tanstack/react-table": "^8.2.6",
     "js-cookie": "^3.0.5",
