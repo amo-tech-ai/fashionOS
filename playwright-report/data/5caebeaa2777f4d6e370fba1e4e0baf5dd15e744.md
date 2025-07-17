@@ -1,0 +1,47 @@
+# Page snapshot
+
+```yaml
+- banner:
+  - button
+  - text: Live Fashion Event Management
+- main:
+  - paragraph: "email: info@refine.dev password: refine-supabase"
+  - heading "Sign in to your account" [level=1]
+  - separator
+  - text: Email
+  - textbox "Email": invalid@example.com
+  - text: Password
+  - textbox "Password": wrongpassword
+  - text: Remember me
+  - checkbox "Remember me"
+  - link "Forgot password?":
+    - /url: /forgot-password
+  - button "Sign in"
+  - text: Don’t have an account?
+  - link "Sign up":
+    - /url: /register
+- contentinfo:
+  - text: FashionOS Canada's premier fashion event management platform. Streamlining runway shows, fashion weeks, and industry events across North America. Platform
+  - link "Events":
+    - /url: /events
+  - link "Blog":
+    - /url: /blog-posts
+  - link "Categories":
+    - /url: /categories
+  - text: Support
+  - link "Help Center":
+    - /url: /help
+  - link "Contact":
+    - /url: /contact
+  - link "API Docs":
+    - /url: /api-docs
+  - separator
+  - text: © 2025 FashionOS. All rights reserved. Made in Canada 🇨🇦
+  - link "Privacy Policy":
+    - /url: /privacy
+  - link "Terms of Service":
+    - /url: /terms
+  - link "Cookie Policy":
+    - /url: /cookies
+- alert
+```

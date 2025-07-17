@@ -1,17 +1,35 @@
 "use client";
 
 import type { PropsWithChildren } from "react";
+import { Box } from "@mantine/core";
 import { Breadcrumb } from "../breadcrumb";
 import { Menu } from "../menu";
+import { Footer } from "../footer";
 
 export const Layout: React.FC<PropsWithChildren> = ({ children }) => {
   return (
-    <div className="layout">
+    <Box
+      style={{
+        minHeight: "100vh",
+        display: "flex",
+        flexDirection: "column",
+      }}
+    >
       <Menu />
-      <div className="content">
+      <Box
+        component="main"
+        style={{
+          flex: 1,
+          display: "flex",
+          flexDirection: "column",
+        }}
+      >
         <Breadcrumb />
-        <div>{children}</div>
-      </div>
-    </div>
+        <Box style={{ flex: 1, padding: "var(--mantine-spacing-md)" }}>
+          {children}
+        </Box>
+      </Box>
+      <Footer />
+    </Box>
   );
 };

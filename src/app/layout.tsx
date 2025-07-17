@@ -21,7 +21,7 @@ import {
   Anchor
 } from "@mantine/core";
 import { Refine } from "@refinedev/core";
-import { RefineKbar, RefineKbarProvider } from "@refinedev/kbar";
+// import { RefineKbar, RefineKbarProvider } from "@refinedev/kbar";
 import routerProvider from "@refinedev/nextjs-router";
 import { dataProvider, liveProvider } from "@refinedev/supabase";
 import { supabaseClient } from "@/utility/supabaseClient";
@@ -66,7 +66,6 @@ function LayoutContent({ children }: { children: React.ReactNode }) {
       withNormalizeCSS
       withGlobalStyles
     >
-      <RefineKbarProvider>
         <Refine
           routerProvider={routerProvider}
           dataProvider={dataProvider(supabaseClient)}
@@ -99,162 +98,269 @@ function LayoutContent({ children }: { children: React.ReactNode }) {
             warnWhenUnsavedChanges: true,
           }}
         >
-          <AppShell
-            navbarOffsetBreakpoint="sm"
-            asideOffsetBreakpoint="sm"
-            navbar={
-              <Navbar p="md" hiddenBreakpoint="sm" hidden={!opened} width={{ sm: 250, lg: 280 }}>
-                <Navbar.Section grow>
-                  <Group position="center" mb="lg">
-                    <ThemeIcon size="xl" radius="md" variant="light">
-                      <IconBrandTabler size={18} />
-                    </ThemeIcon>
-                    <Text size="xl" weight={700} color="blue.6">
-                      FashionOS
-                    </Text>
-                  </Group>
-                  
-                  <Divider mb="md" />
-                  
-                  {navLinks.map((link) => {
-                    const IconComponent = link.icon;
-                    const isActive = pathname === link.href;
+          <Box style={{ minHeight: "100vh", display: "flex", flexDirection: "column" }}>
+            <AppShell
+              navbarOffsetBreakpoint="sm"
+              asideOffsetBreakpoint="sm"
+              navbar={
+                <Navbar p="md" hiddenBreakpoint="sm" hidden={!opened} width={{ sm: 250, lg: 280 }}>
+                  <Navbar.Section grow>
+                    <Group position="center" mb="lg">
+                      <ThemeIcon size="xl" radius="md" variant="light">
+                        <IconBrandTabler size={18} />
+                      </ThemeIcon>
+                      <Text size="xl" weight={700} color="blue.6">
+                        FashionOS
+                      </Text>
+                    </Group>
                     
-                    return (
-                      <UnstyledButton
-                        key={link.href}
-                        component={Link}
-                        href={link.href}
-                        style={{ width: '100%', textDecoration: 'none' }}
-                        mb={4}
-                      >
-                        <Box
-                          sx={(theme) => ({
-                            display: 'flex',
-                            alignItems: 'center',
-                            width: '100%',
-                            padding: theme.spacing.md,
-                            borderRadius: theme.radius.md,
-                            backgroundColor: isActive ? theme.colors.blue[0] : 'transparent',
-                            color: isActive ? theme.colors.blue[7] : theme.colors.gray[7],
-                            fontSize: theme.fontSizes.sm,
-                            fontWeight: isActive ? 600 : 400,
-                            '&:hover': {
-                              backgroundColor: theme.colors.gray[0],
-                            },
-                          })}
+                    <Divider mb="md" />
+                    
+                    {navLinks.map((link) => {
+                      const IconComponent = link.icon;
+                      const isActive = pathname === link.href;
+                      
+                      return (
+                        <UnstyledButton
+                          key={link.href}
+                          component={Link}
+                          href={link.href}
+                          style={{ width: '100%', textDecoration: 'none' }}
+                          mb={4}
                         >
-                          <ThemeIcon
-                            variant={isActive ? "light" : "outline"}
-                            color={isActive ? "blue" : "gray"}
-                            size={30}
-                            radius="md"
-                            mr="sm"
+                          <Box
+                            sx={(theme) => ({
+                              display: 'flex',
+                              alignItems: 'center',
+                              width: '100%',
+                              padding: theme.spacing.md,
+                              borderRadius: theme.radius.md,
+                              backgroundColor: isActive ? theme.colors.blue[0] : 'transparent',
+                              color: isActive ? theme.colors.blue[7] : theme.colors.gray[7],
+                              fontSize: theme.fontSizes.sm,
+                              fontWeight: isActive ? 600 : 400,
+                              '&:hover': {
+                                backgroundColor: theme.colors.gray[0],
+                              },
+                            })}
                           >
-                            <IconComponent size={16} />
-                          </ThemeIcon>
-                          <Text>{link.label}</Text>
-                          {isActive && (
-                            <Badge ml="auto" size="xs" color="blue">
-                              Current
-                            </Badge>
-                          )}
-                        </Box>
-                      </UnstyledButton>
-                    );
-                  })}
-                </Navbar.Section>
-                
-                <Navbar.Section>
-                  <Divider mb="md" />
-                  <UnstyledButton
-                    style={{ width: '100%' }}
-                    p="md"
-                    sx={(theme) => ({
-                      display: 'flex',
-                      alignItems: 'center',
-                      borderRadius: theme.radius.md,
-                      '&:hover': {
-                        backgroundColor: theme.colors.gray[0],
-                      },
+                            <ThemeIcon
+                              variant={isActive ? "light" : "outline"}
+                              color={isActive ? "blue" : "gray"}
+                              size={30}
+                              radius="md"
+                              mr="sm"
+                            >
+                              <IconComponent size={16} />
+                            </ThemeIcon>
+                            <Text>{link.label}</Text>
+                            {isActive && (
+                              <Badge ml="auto" size="xs" color="blue">
+                                Current
+                              </Badge>
+                            )}
+                          </Box>
+                        </UnstyledButton>
+                      );
                     })}
-                  >
-                    <ThemeIcon variant="outline" color="gray" size={30} radius="md" mr="sm">
-                      <IconSettings size={16} />
-                    </ThemeIcon>
-                    <Text size="sm" color="gray.7">Settings</Text>
-                  </UnstyledButton>
-                  <UnstyledButton
-                    style={{ width: '100%' }}
-                    p="md"
-                    sx={(theme) => ({
-                      display: 'flex',
-                      alignItems: 'center',
-                      borderRadius: theme.radius.md,
-                      color: theme.colors.red[6],
-                      '&:hover': {
-                        backgroundColor: theme.colors.red[0],
-                      },
-                    })}
-                  >
-                    <ThemeIcon variant="outline" color="red" size={30} radius="md" mr="sm">
-                      <IconLogout size={16} />
-                    </ThemeIcon>
-                    <Text size="sm">Logout</Text>
-                  </UnstyledButton>
-                </Navbar.Section>
-              </Navbar>
-            }
-            header={
-              <Header height={{ base: 60, md: 70 }} p="md">
-                <div style={{ display: 'flex', alignItems: 'center', height: '100%' }}>
-                  <MediaQuery largerThan="sm" styles={{ display: 'none' }}>
-                    <Burger
-                      opened={opened}
-                      onClick={() => setOpened((o) => !o)}
-                      size="sm"
-                      color={theme.colors.gray[6]}
-                      mr="xl"
-                    />
-                  </MediaQuery>
+                  </Navbar.Section>
+                  
+                  <Navbar.Section>
+                    <Divider mb="md" />
+                    <UnstyledButton
+                      style={{ width: '100%' }}
+                      p="md"
+                      sx={(theme) => ({
+                        display: 'flex',
+                        alignItems: 'center',
+                        borderRadius: theme.radius.md,
+                        '&:hover': {
+                          backgroundColor: theme.colors.gray[0],
+                        },
+                      })}
+                    >
+                      <ThemeIcon variant="outline" color="gray" size={30} radius="md" mr="sm">
+                        <IconSettings size={16} />
+                      </ThemeIcon>
+                      <Text size="sm" color="gray.7">Settings</Text>
+                    </UnstyledButton>
+                    <UnstyledButton
+                      style={{ width: '100%' }}
+                      p="md"
+                      sx={(theme) => ({
+                        display: 'flex',
+                        alignItems: 'center',
+                        borderRadius: theme.radius.md,
+                        color: theme.colors.red[6],
+                        '&:hover': {
+                          backgroundColor: theme.colors.red[0],
+                        },
+                      })}
+                    >
+                      <ThemeIcon variant="outline" color="red" size={30} radius="md" mr="sm">
+                        <IconLogout size={16} />
+                      </ThemeIcon>
+                      <Text size="sm">Logout</Text>
+                    </UnstyledButton>
+                  </Navbar.Section>
+                </Navbar>
+              }
+              header={
+                <Header height={{ base: 60, md: 70 }} p="md">
+                  <div style={{ display: 'flex', alignItems: 'center', height: '100%' }}>
+                    <MediaQuery largerThan="sm" styles={{ display: 'none' }}>
+                      <Burger
+                        opened={opened}
+                        onClick={() => setOpened((o) => !o)}
+                        size="sm"
+                        color={theme.colors.gray[6]}
+                        mr="xl"
+                      />
+                    </MediaQuery>
 
-                  <Container size="xl" style={{ flex: 1 }}>
-                    <Group position="apart">
-                      <MediaQuery smallerThan="sm" styles={{ display: 'none' }}>
+                    <Container size="xl" style={{ flex: 1 }}>
+                      <Group position="apart">
+                        <MediaQuery smallerThan="sm" styles={{ display: 'none' }}>
+                          <Group>
+                            <ThemeIcon size="lg" radius="md" variant="light">
+                              <IconBrandTabler size={20} />
+                            </ThemeIcon>
+                            <Text size="lg" weight={700} color="blue.6">
+                              FashionOS
+                            </Text>
+                          </Group>
+                        </MediaQuery>
+                        
                         <Group>
-                          <ThemeIcon size="lg" radius="md" variant="light">
-                            <IconBrandTabler size={20} />
-                          </ThemeIcon>
-                          <Text size="lg" weight={700} color="blue.6">
-                            FashionOS
+                          <Badge variant="light" color="green" size="sm">
+                            Live
+                          </Badge>
+                          <Text size="sm" color="gray.6">
+                            Fashion Event Management
                           </Text>
                         </Group>
-                      </MediaQuery>
-                      
-                      <Group>
-                        <Badge variant="light" color="green" size="sm">
-                          Live
-                        </Badge>
-                        <Text size="sm" color="gray.6">
-                          Fashion Event Management
-                        </Text>
                       </Group>
-                    </Group>
-                  </Container>
-                </div>
-              </Header>
-            }
-          >
-            <Container size="xl" p="md">
-              {children}
-            </Container>
-          </AppShell>
+                    </Container>
+                  </div>
+                </Header>
+              }
+              style={{ flex: 1 }}
+            >
+              <Container size="xl" p="md" style={{ flex: 1 }}>
+                {children}
+              </Container>
+            </AppShell>
+            
+            {/* Footer Component */}
+            <Box
+              component="footer"
+              sx={(theme) => ({
+                backgroundColor: theme.colors.gray[0],
+                borderTop: `1px solid ${theme.colors.gray[3]}`,
+                marginTop: "auto",
+                padding: `${theme.spacing.xl}px 0`,
+                marginLeft: opened ? 0 : 0,
+                [`@media (min-width: ${theme.breakpoints.sm}px)`]: {
+                  marginLeft: 250, // Match navbar width on desktop
+                },
+                [`@media (min-width: ${theme.breakpoints.lg}px)`]: {
+                  marginLeft: 280, // Match navbar width on large screens
+                },
+              })}
+            >
+              <Container size="xl" px="md">
+                <Box
+                  sx={(theme) => ({
+                    display: "grid",
+                    gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))",
+                    gap: theme.spacing.xl,
+                    marginBottom: theme.spacing.xl,
+                    [`@media (max-width: ${theme.breakpoints.sm}px)`]: {
+                      gridTemplateColumns: "1fr",
+                      gap: theme.spacing.md,
+                    },
+                  })}
+                >
+                  {/* Brand Section */}
+                  <Box>
+                    <Text size="lg" weight={600} color="dark" mb="xs">
+                      FashionOS
+                    </Text>
+                    <Text size="sm" color="dimmed" mb="md">
+                      Canada&apos;s premier fashion event management platform. 
+                      Streamlining runway shows, fashion weeks, and industry events across North America.
+                    </Text>
+                  </Box>
+
+                  {/* Quick Links */}
+                  <Box>
+                    <Text size="sm" weight={500} color="dark" mb="xs">
+                      Platform
+                    </Text>
+                    <Anchor href="/events" size="sm" color="dimmed" style={{ display: "block", marginBottom: 4 }}>
+                      Events
+                    </Anchor>
+                    <Anchor href="/blog-posts" size="sm" color="dimmed" style={{ display: "block", marginBottom: 4 }}>
+                      Blog
+                    </Anchor>
+                    <Anchor href="/categories" size="sm" color="dimmed" style={{ display: "block" }}>
+                      Categories
+                    </Anchor>
+                  </Box>
+
+                  {/* Support */}
+                  <Box>
+                    <Text size="sm" weight={500} color="dark" mb="xs">
+                      Support
+                    </Text>
+                    <Anchor href="/help" size="sm" color="dimmed" style={{ display: "block", marginBottom: 4 }}>
+                      Help Center
+                    </Anchor>
+                    <Anchor href="/contact" size="sm" color="dimmed" style={{ display: "block", marginBottom: 4 }}>
+                      Contact
+                    </Anchor>
+                    <Anchor href="/api-docs" size="sm" color="dimmed" style={{ display: "block" }}>
+                      API Docs
+                    </Anchor>
+                  </Box>
+                </Box>
+
+                <Divider my="lg" />
+
+                {/* Bottom Section */}
+                <Box
+                  sx={(theme) => ({
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    flexWrap: "wrap",
+                    gap: theme.spacing.md,
+                    [`@media (max-width: ${theme.breakpoints.sm}px)`]: {
+                      flexDirection: "column",
+                      alignItems: "flex-start",
+                    },
+                  })}
+                >
+                  <Text size="xs" color="dimmed">
+                    © 2025 FashionOS. All rights reserved. Made in Canada 🇨🇦
+                  </Text>
+                  <Group spacing="md">
+                    <Anchor href="/privacy" size="xs" color="dimmed">
+                      Privacy Policy
+                    </Anchor>
+                    <Anchor href="/terms" size="xs" color="dimmed">
+                      Terms of Service
+                    </Anchor>
+                    <Anchor href="/cookies" size="xs" color="dimmed">
+                      Cookie Policy
+                    </Anchor>
+                  </Group>
+                </Box>
+              </Container>
+            </Box>
+          </Box>
           
-          <Suspense fallback={<LoadingSpinner />}>
-            <RefineKbar />
-          </Suspense>
         </Refine>
-      </RefineKbarProvider>
     </MantineProvider>
   );
 }
