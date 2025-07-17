@@ -21,7 +21,7 @@ import {
   Avatar,
   Divider,
   Alert,
-  NumberFormatter,
+
   Flex,
   Box,
   Button
@@ -104,7 +104,7 @@ function MetricCard({
           <Group align="center" spacing="xs">
             <Text weight={700} size="xl">
               {typeof value === 'number' && value > 1000 ? 
-                <NumberFormatter value={value} thousandSeparator /> : 
+                value.toLocaleString() : 
                 value
               }
             </Text>

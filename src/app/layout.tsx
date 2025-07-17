@@ -18,7 +18,9 @@ import {
   Divider,
   Badge,
   Container,
-  Anchor
+  Anchor,
+  Grid,
+  Stack
 } from "@mantine/core";
 import { Refine } from "@refinedev/core";
 // import { RefineKbar, RefineKbarProvider } from "@refinedev/kbar";
@@ -28,7 +30,7 @@ import { supabaseClient } from "@/utility/supabaseClient";
 import authProvider from "@/authProvider";
 import { useState, Suspense } from "react";
 import Link from "next/link";
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import {
   IconDashboard,
   IconCalendarEvent,
@@ -36,7 +38,15 @@ import {
   IconCategory,
   IconSettings,
   IconLogout,
-  IconBrandTabler
+  IconBrandTabler,
+  IconUserShield,
+  IconCalendarStats,
+  IconCoin,
+  IconPalette,
+  IconUserStar,
+  IconBuilding,
+  IconShoppingCart,
+  IconCamera
 } from '@tabler/icons-react';
 
 // Loading component
@@ -49,12 +59,26 @@ function LayoutContent({ children }: { children: React.ReactNode }) {
   const [opened, setOpened] = useState(false);
   const theme = useMantineTheme();
   const pathname = usePathname();
+  const router = useRouter();
+
+  const handleLogout = async () => {
+    await supabaseClient.auth.signOut();
+    router.push('/login');
+  };
 
   const navLinks = [
     { icon: IconDashboard, label: "Dashboard", href: "/" },
     { icon: IconCalendarEvent, label: "Events", href: "/events" },
     { icon: IconArticle, label: "Blog Posts", href: "/blog-posts" },
     { icon: IconCategory, label: "Categories", href: "/categories" },
+    { icon: IconUserShield, label: "Admin Dashboard", href: "/admin" },
+    { icon: IconCalendarStats, label: "Organizer Portal", href: "/organizer" },
+    { icon: IconCoin, label: "Sponsor Hub", href: "/sponsor" },
+    { icon: IconPalette, label: "Designer Studio", href: "/designer" },
+    { icon: IconUserStar, label: "Model Dashboard", href: "/model" },
+    { icon: IconBuilding, label: "Venue Manager", href: "/venue" },
+    { icon: IconShoppingCart, label: "Vendor Portal", href: "/vendor" },
+    { icon: IconCamera, label: "Media Center", href: "/media" },
   ];
 
   return (
@@ -103,18 +127,20 @@ function LayoutContent({ children }: { children: React.ReactNode }) {
               navbarOffsetBreakpoint="sm"
               asideOffsetBreakpoint="sm"
               navbar={
-                <Navbar p="md" hiddenBreakpoint="sm" hidden={!opened} width={{ sm: 250, lg: 280 }}>
+                <Navbar p="xs" hiddenBreakpoint="sm" hidden={!opened} width={{ sm: 200, lg: 220 }}>
                   <Navbar.Section grow>
-                    <Group position="center" mb="lg">
-                      <ThemeIcon size="xl" radius="md" variant="light">
-                        <IconBrandTabler size={18} />
-                      </ThemeIcon>
-                      <Text size="xl" weight={700} color="blue.6">
-                        FashionOS
-                      </Text>
+                    <Group position="apart" mb="md" px="xs">
+                      <Group spacing="xs">
+                        <ThemeIcon size="lg" radius="md" variant="filled">
+                          <IconBrandTabler size={20} />
+                        </ThemeIcon>
+                        <Text size="lg" weight={700} color="blue.6">
+                          FashionOS
+                        </Text>
+                      </Group>
                     </Group>
                     
-                    <Divider mb="md" />
+                    <Divider mb="sm" />
                     
                     {navLinks.map((link) => {
                       const IconComponent = link.icon;
@@ -126,39 +152,28 @@ function LayoutContent({ children }: { children: React.ReactNode }) {
                           component={Link}
                           href={link.href}
                           style={{ width: '100%', textDecoration: 'none' }}
-                          mb={4}
+                          mb={2}
                         >
                           <Box
                             sx={(theme) => ({
                               display: 'flex',
                               alignItems: 'center',
                               width: '100%',
-                              padding: theme.spacing.md,
+                              padding: `${theme.spacing.xs}px ${theme.spacing.sm}px`,
                               borderRadius: theme.radius.md,
                               backgroundColor: isActive ? theme.colors.blue[0] : 'transparent',
-                              color: isActive ? theme.colors.blue[7] : theme.colors.gray[7],
-                              fontSize: theme.fontSizes.sm,
-                              fontWeight: isActive ? 600 : 400,
+                              color: isActive ? theme.colors.blue[7] : theme.colors.gray[6],
                               '&:hover': {
                                 backgroundColor: theme.colors.gray[0],
+                                color: theme.colors.blue[6],
                               },
+                              transition: 'all 0.2s ease',
                             })}
                           >
-                            <ThemeIcon
-                              variant={isActive ? "light" : "outline"}
-                              color={isActive ? "blue" : "gray"}
-                              size={30}
-                              radius="md"
-                              mr="sm"
-                            >
-                              <IconComponent size={16} />
-                            </ThemeIcon>
-                            <Text>{link.label}</Text>
-                            {isActive && (
-                              <Badge ml="auto" size="xs" color="blue">
-                                Current
-                              </Badge>
-                            )}
+                            <IconComponent size={18} style={{ minWidth: 18 }} />
+                            <Text size="sm" ml="sm" weight={isActive ? 500 : 400}>
+                              {link.label}
+                            </Text>
                           </Box>
                         </UnstyledButton>
                       );
@@ -166,27 +181,30 @@ function LayoutContent({ children }: { children: React.ReactNode }) {
                   </Navbar.Section>
                   
                   <Navbar.Section>
-                    <Divider mb="md" />
+                    <Divider mb="sm" />
                     <UnstyledButton
                       style={{ width: '100%' }}
-                      p="md"
+                      px="sm"
+                      py="xs"
                       sx={(theme) => ({
                         display: 'flex',
                         alignItems: 'center',
                         borderRadius: theme.radius.md,
                         '&:hover': {
                           backgroundColor: theme.colors.gray[0],
+                          color: theme.colors.blue[6],
                         },
+                        transition: 'all 0.2s ease',
                       })}
                     >
-                      <ThemeIcon variant="outline" color="gray" size={30} radius="md" mr="sm">
-                        <IconSettings size={16} />
-                      </ThemeIcon>
-                      <Text size="sm" color="gray.7">Settings</Text>
+                      <IconSettings size={18} style={{ minWidth: 18 }} />
+                      <Text size="sm" ml="sm">Settings</Text>
                     </UnstyledButton>
                     <UnstyledButton
                       style={{ width: '100%' }}
-                      p="md"
+                      px="sm"
+                      py="xs"
+                      onClick={handleLogout}
                       sx={(theme) => ({
                         display: 'flex',
                         alignItems: 'center',
@@ -195,12 +213,11 @@ function LayoutContent({ children }: { children: React.ReactNode }) {
                         '&:hover': {
                           backgroundColor: theme.colors.red[0],
                         },
+                        transition: 'all 0.2s ease',
                       })}
                     >
-                      <ThemeIcon variant="outline" color="red" size={30} radius="md" mr="sm">
-                        <IconLogout size={16} />
-                      </ThemeIcon>
-                      <Text size="sm">Logout</Text>
+                      <IconLogout size={18} style={{ minWidth: 18 }} />
+                      <Text size="sm" ml="sm">Logout</Text>
                     </UnstyledButton>
                   </Navbar.Section>
                 </Navbar>
@@ -261,10 +278,10 @@ function LayoutContent({ children }: { children: React.ReactNode }) {
                 padding: `${theme.spacing.xl}px 0`,
                 marginLeft: opened ? 0 : 0,
                 [`@media (min-width: ${theme.breakpoints.sm}px)`]: {
-                  marginLeft: 250, // Match navbar width on desktop
+                  marginLeft: 200, // Match navbar width on desktop
                 },
                 [`@media (min-width: ${theme.breakpoints.lg}px)`]: {
-                  marginLeft: 280, // Match navbar width on large screens
+                  marginLeft: 220, // Match navbar width on large screens
                 },
               })}
             >
