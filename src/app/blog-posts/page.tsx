@@ -1,27 +1,64 @@
 "use client";
 
-import { GetManyResponse, useMany, useNavigation } from "@refinedev/core";
-import { useTable } from "@refinedev/react-table";
-import { ColumnDef, flexRender } from "@tanstack/react-table";
 import React from "react";
+import { List, DateField, ShowButton, EditButton, DeleteButton } from "@refinedev/mantine";
+import { useTable } from "@refinedev/react-table";
+import { Table, Group, ScrollArea, Pagination, TextInput, Badge, Avatar, Text } from "@mantine/core";
+import { IconSearch, IconArticle } from "@tabler/icons-react";
+import { flexRender } from "@tanstack/react-table";
+import { ColumnDef } from "@tanstack/react-table";
+import { GetManyResponse, useMany } from "@refinedev/core";
+
+interface IBlogPost {
+  id: string;
+  title: string;
+  content: string;
+  status: "draft" | "published";
+  categories: { id: string; title: string };
+  createdAt: string;
+  author?: string;
+  featured_image?: string;
+}
 
 export default function BlogPostList() {
-  const columns = React.useMemo<ColumnDef<any>[]>(
+  const columns = React.useMemo<ColumnDef<IBlogPost>[]>(
     () => [
-      {
-        id: "id",
-        accessorKey: "id",
-        header: "ID",
-      },
       {
         id: "title",
         accessorKey: "title",
         header: "Title",
+        cell: function render({ getValue, row }) {
+          return (
+            <Group spacing="sm">
+              {row.original.featured_image ? (
+                <Avatar src={row.original.featured_image} size="sm" radius="md">
+                  <IconArticle size={16} />
+                </Avatar>
+              ) : (
+                <Avatar color="blue" size="sm" radius="md">
+                  <IconArticle size={16} />
+                </Avatar>
+              )}
+              <Text weight={500} size="sm">
+                {getValue() as string}
+              </Text>
+            </Group>
+          );
+        },
       },
       {
         id: "content",
         accessorKey: "content",
-        header: "Content",
+        header: "Content Preview",
+        cell: function render({ getValue }) {
+          const content = getValue() as string;
+          const preview = content?.substring(0, 100) + (content?.length > 100 ? "..." : "");
+          return (
+            <Text size="sm" color="dimmed" lineClamp={2}>
+              {preview}
+            </Text>
+          );
+        },
       },
       {
         id: "category",
@@ -37,7 +74,13 @@ export default function BlogPostList() {
               (item) => item.id == getValue<any>()?.id
             );
 
-            return category?.title ?? "Loading...";
+            return category?.title ? (
+              <Badge variant="outline" color="grape">
+                {category.title}
+              </Badge>
+            ) : (
+              <Text size="sm" color="dimmed">-</Text>
+            );
           } catch (error) {
             return null;
           }
@@ -47,69 +90,42 @@ export default function BlogPostList() {
         id: "status",
         accessorKey: "status",
         header: "Status",
+        cell: function render({ getValue }) {
+          const status = getValue() as string;
+          return (
+            <Badge
+              color={status === "published" ? "green" : "gray"}
+              variant="light"
+            >
+              {status}
+            </Badge>
+          );
+        },
       },
       {
         id: "createdAt",
         accessorKey: "createdAt",
-        header: "Created At",
+        header: "Created",
         cell: function render({ getValue }) {
-          return new Date(getValue<any>()).toLocaleString(undefined, {
-            timeZone: "UTC",
-          });
-        },
-      },
-      {
-        id: "actions",
-        accessorKey: "id",
-        header: "Actions",
-        cell: function render({ getValue }) {
-          return (
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "row",
-                flexWrap: "wrap",
-                gap: "4px",
-              }}
-            >
-              <button
-                onClick={() => {
-                  show("blog_posts", getValue() as string);
-                }}
-              >
-                Show
-              </button>
-              <button
-                onClick={() => {
-                  edit("blog_posts", getValue() as string);
-                }}
-              >
-                Edit
-              </button>
-            </div>
-          );
+          return <DateField value={getValue() as string} format="MMM DD, YYYY" />;
         },
       },
     ],
     []
   );
 
-  const { edit, show, create } = useNavigation();
-
   const {
     getHeaderGroups,
     getRowModel,
     setOptions,
     refineCore: {
+      setCurrent,
+      pageCount,
+      current,
       tableQueryResult: { data: tableData },
     },
     getState,
     setPageIndex,
-    getCanPreviousPage,
-    getPageCount,
-    getCanNextPage,
-    nextPage,
-    previousPage,
     setPageSize,
   } = useTable({
     columns,
@@ -139,19 +155,18 @@ export default function BlogPostList() {
   }));
 
   return (
-    <div style={{ padding: "16px" }}>
-      <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-        }}
-      >
-        <h1>{"List"}</h1>
-        <button onClick={() => create("blog_posts")}>{"Create"}</button>
-      </div>
-      <div style={{ maxWidth: "100%", overflowY: "scroll" }}>
-        <table>
+    <List
+      title="Blog Posts"
+      headerButtons={
+        <TextInput
+          placeholder="Search posts..."
+          icon={<IconSearch size={16} />}
+          style={{ width: 300 }}
+        />
+      }
+    >
+      <ScrollArea>
+        <Table highlightOnHover>
           <thead>
             {getHeaderGroups().map((headerGroup) => (
               <tr key={headerGroup.id}>
@@ -164,6 +179,7 @@ export default function BlogPostList() {
                       )}
                   </th>
                 ))}
+                <th>Actions</th>
               </tr>
             ))}
           </thead>
@@ -175,60 +191,26 @@ export default function BlogPostList() {
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
                   </td>
                 ))}
+                <td>
+                  <Group spacing={4} position="right" noWrap>
+                    <ShowButton hideText recordItemId={row.original.id} />
+                    <EditButton hideText recordItemId={row.original.id} />
+                    <DeleteButton hideText recordItemId={row.original.id} />
+                  </Group>
+                </td>
               </tr>
             ))}
           </tbody>
-        </table>
-      </div>
-      <div style={{ marginTop: "12px" }}>
-        <button
-          onClick={() => setPageIndex(0)}
-          disabled={!getCanPreviousPage()}
-        >
-          {"<<"}
-        </button>
-        <button onClick={() => previousPage()} disabled={!getCanPreviousPage()}>
-          {"<"}
-        </button>
-        <button onClick={() => nextPage()} disabled={!getCanNextPage()}>
-          {">"}
-        </button>
-        <button
-          onClick={() => setPageIndex(getPageCount() - 1)}
-          disabled={!getCanNextPage()}
-        >
-          {">>"}
-        </button>
-        <span>
-          <strong>
-            {" "}
-            {getState().pagination.pageIndex + 1} / {getPageCount()}{" "}
-          </strong>
-        </span>
-        <span>
-          | {"Go"}:{" "}
-          <input
-            type="number"
-            defaultValue={getState().pagination.pageIndex + 1}
-            onChange={(e) => {
-              const page = e.target.value ? Number(e.target.value) - 1 : 0;
-              setPageIndex(page);
-            }}
-          />
-        </span>{" "}
-        <select
-          value={getState().pagination.pageSize}
-          onChange={(e) => {
-            setPageSize(Number(e.target.value));
-          }}
-        >
-          {[10, 20, 30, 40, 50].map((pageSize) => (
-            <option key={pageSize} value={pageSize}>
-              {"Show"} {pageSize}
-            </option>
-          ))}
-        </select>
-      </div>
-    </div>
+        </Table>
+      </ScrollArea>
+      
+      <Pagination
+        position="right"
+        total={pageCount}
+        page={current}
+        onChange={setCurrent}
+        mt="md"
+      />
+    </List>
   );
 }

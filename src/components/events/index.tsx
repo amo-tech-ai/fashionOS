@@ -115,17 +115,6 @@ export const EventCreate = () => {
   );
 };
 
-export const EventEdit = () => {
-  return (
-    <Container size="lg" py="xl">
-      <Title order={1} mb="xl">Edit Event</Title>
-      <Card shadow="sm" p="lg" radius="md" withBorder>
-        <Text>Edit form will go here</Text>
-      </Card>
-    </Container>
-  );
-};
-
 export const EventShow = () => {
   const { id } = useParams();
   const { data, isLoading, isError } = useOne({

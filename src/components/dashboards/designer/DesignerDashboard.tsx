@@ -15,6 +15,7 @@ import {
   Avatar,
   SimpleGrid,
   RingProgress,
+  ThemeIcon,
   ActionIcon,
   Menu,
   Image,
@@ -44,7 +45,7 @@ import { useList } from "@refinedev/core";
 import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 
 // Collection Card Component
-const CollectionCard = ({ collection }) => {
+const CollectionCard = ({ collection }: { collection: any }) => {
   return (
     <Card shadow="sm" p="lg" radius="md" withBorder>
       <Card.Section>
@@ -84,7 +85,7 @@ const CollectionCard = ({ collection }) => {
 };
 
 // Show Schedule Component
-const ShowSchedule = ({ shows }) => {
+const ShowSchedule = ({ shows }: { shows: any[] }) => {
   return (
     <Card shadow="sm" p="lg" radius="md" withBorder>
       <Title order={4} mb="md">Upcoming Shows</Title>
@@ -108,7 +109,7 @@ const ShowSchedule = ({ shows }) => {
 };
 
 // Business Metrics Widget
-const BusinessMetrics = ({ metrics }) => {
+const BusinessMetrics = ({ metrics }: { metrics: any }) => {
   return (
     <SimpleGrid cols={2} spacing="md">
       <Paper p="md" radius="md" withBorder>
@@ -301,7 +302,7 @@ export const DesignerDashboard = () => {
       </Grid>
 
       {/* Main Content Tabs */}
-      <Tabs value={activeTab} onTabChange={setActiveTab} color="violet">
+      <Tabs value={activeTab} onTabChange={(value) => setActiveTab(value || 'overview')} color="violet">
         <Tabs.List>
           <Tabs.Tab value="overview" icon={<IconPalette size={14} />}>
             Overview

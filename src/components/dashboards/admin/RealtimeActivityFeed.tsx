@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Box, Text, Badge, ScrollArea } from '@mantine/core';
+import { Box, Text, Badge, ScrollArea, Group } from '@mantine/core';
 import { IconActivity, IconUser, IconCalendarEvent, IconCurrencyDollar } from '@tabler/icons';
 import { useDashboardRealtime } from '@/hooks/useRealtimeSubscription';
 import { useAuth } from '@/contexts/AuthContext';

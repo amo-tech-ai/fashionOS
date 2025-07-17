@@ -12,9 +12,7 @@ export default function Error({
 }) {
   return (
     <Container size="sm" py="xl">
-      <ErrorComponent 
-        message={error.message || "Something went wrong!"}
-      />
+      <ErrorComponent />
       <Button onClick={reset} mt="md">
         Try again
       </Button>

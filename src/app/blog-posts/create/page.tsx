@@ -1,108 +1,190 @@
 "use client";
 
-import { useNavigation, useSelect } from "@refinedev/core";
-import { useForm } from "@refinedev/react-hook-form";
+import { Create, useForm, useSelect } from "@refinedev/mantine";
+import { 
+  TextInput, 
+  Textarea, 
+  Select, 
+  Group,
+  Stack,
+  Grid,
+  Title,
+  Paper,
+  FileInput,
+  Switch,
+  Text
+} from "@mantine/core";
+import { DatePicker } from "@mantine/dates";
+import { IconArticle, IconPhoto, IconTag, IconCalendar } from "@tabler/icons-react";
 
 export default function BlogPostCreate() {
-  const { list } = useNavigation();
-
   const {
-    refineCore: { onFinish },
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm({});
+    getInputProps,
+    saveButtonProps,
+    setFieldValue,
+    errors,
+  } = useForm({
+    initialValues: {
+      title: "",
+      content: "",
+      categoryId: "",
+      status: "draft",
+      featured_image: "",
+      excerpt: "",
+      author: "",
+      publish_date: new Date(),
+      is_featured: false,
+      tags: [],
+    },
+    validate: {
+      title: (value) => (value.length < 3 ? "Title must be at least 3 characters" : null),
+      content: (value) => (!value ? "Content is required" : null),
+      categoryId: (value) => (!value ? "Category is required" : null),
+    },
+  });
 
-  const { options: categoryOptions } = useSelect({
+  const { selectProps: categorySelectProps } = useSelect({
     resource: "categories",
+    optionLabel: "title",
+    optionValue: "id",
   });
 
   return (
-    <div style={{ padding: "16px" }}>
-      <div style={{ display: "flex", justifyContent: "space-between" }}>
-        <h1>Create</h1>
-        <div>
-          <button
-            onClick={() => {
-              list("blog_posts");
-            }}
-          >
-            List
-          </button>
-        </div>
-      </div>
-      <form onSubmit={handleSubmit(onFinish)}>
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            gap: "8px",
-          }}
-        >
-          <label>
-            <span style={{ marginRight: "8px" }}>title</span>
-            <input
-              type="text"
-              {...register("title", {
-                required: "This field is required",
-              })}
+    <Create saveButtonProps={saveButtonProps}>
+      <form>
+        <Stack spacing="xl">
+          {/* Basic Information */}
+          <Paper p="md" radius="md" withBorder>
+            <Title order={4} mb="md">
+              <Group spacing="xs">
+                <IconArticle size={20} />
+                Article Details
+              </Group>
+            </Title>
+            
+            <Grid>
+              <Grid.Col span={12}>
+                <TextInput
+                  label="Article Title"
+                  placeholder="Enter your blog post title"
+                  {...getInputProps("title")}
+                  error={errors.title}
+                  required
+                />
+              </Grid.Col>
+              
+              <Grid.Col span={12}>
+                <Textarea
+                  label="Content"
+                  placeholder="Write your article content..."
+                  minRows={10}
+                  autosize
+                  maxRows={20}
+                  {...getInputProps("content")}
+                  error={errors.content}
+                  required
+                />
+              </Grid.Col>
+              
+              <Grid.Col span={12}>
+                <Textarea
+                  label="Excerpt"
+                  placeholder="Brief summary of the article (optional)"
+                  minRows={2}
+                  maxRows={4}
+                  {...getInputProps("excerpt")}
+                />
+              </Grid.Col>
+            </Grid>
+          </Paper>
+
+          {/* Publishing Options */}
+          <Paper p="md" radius="md" withBorder>
+            <Title order={4} mb="md">
+              <Group spacing="xs">
+                <IconTag size={20} />
+                Publishing Options
+              </Group>
+            </Title>
+            
+            <Grid>
+              <Grid.Col span={6}>
+                <Select
+                  label="Category"
+                  placeholder="Select a category"
+                  {...categorySelectProps}
+                  {...getInputProps("categoryId")}
+                  error={errors.categoryId}
+                  required
+                />
+              </Grid.Col>
+              
+              <Grid.Col span={6}>
+                <Select
+                  label="Status"
+                  data={[
+                    { value: "draft", label: "Draft" },
+                    { value: "published", label: "Published" },
+                    { value: "scheduled", label: "Scheduled" },
+                  ]}
+                  {...getInputProps("status")}
+                />
+              </Grid.Col>
+              
+              <Grid.Col span={6}>
+                <TextInput
+                  label="Author"
+                  placeholder="Author name"
+                  {...getInputProps("author")}
+                />
+              </Grid.Col>
+              
+              <Grid.Col span={6}>
+                <DatePicker
+                  label="Publish Date"
+                  placeholder="Select publish date"
+                  icon={<IconCalendar size={16} />}
+                  {...getInputProps("publish_date")}
+                />
+              </Grid.Col>
+              
+              <Grid.Col span={12}>
+                <Switch
+                  label="Featured Post"
+                  description="Display this post prominently on the homepage"
+                  {...getInputProps("is_featured", { type: "checkbox" })}
+                />
+              </Grid.Col>
+            </Grid>
+          </Paper>
+
+          {/* Media */}
+          <Paper p="md" radius="md" withBorder>
+            <Title order={4} mb="md">
+              <Group spacing="xs">
+                <IconPhoto size={20} />
+                Featured Image
+              </Group>
+            </Title>
+            
+            <FileInput
+              label="Upload Image"
+              accept="image/*"
+              icon={<IconPhoto size={16} />}
+              onChange={(file) => {
+                // Handle file upload logic here
+                if (file) {
+                  // In real app, upload to storage and get URL
+                  setFieldValue("featured_image", file.name);
+                }
+              }}
             />
-            <span style={{ color: "red" }}>
-              {(errors as any)?.title?.message as string}
-            </span>
-          </label>
-          <label>
-            <span style={{ marginRight: "8px" }}>Content</span>
-            <textarea
-              rows={5}
-              cols={33}
-              style={{ verticalAlign: "top" }}
-              {...register("content", {
-                required: "This field is required",
-              })}
-            />
-            <span style={{ color: "red" }}>
-              {(errors as any)?.content?.message as string}
-            </span>
-          </label>
-          <label>
-            <span style={{ marginRight: "8px" }}>Category</span>
-            <select
-              {...register("categoryId", {
-                required: "This field is required",
-              })}
-            >
-              {categoryOptions?.map((option) => (
-                <option value={option.value} key={option.value}>
-                  {option.label}
-                </option>
-              ))}
-            </select>
-            <span style={{ color: "red" }}>
-              {(errors as any)?.categories?.id?.message as string}
-            </span>
-          </label>
-          <label>
-            <span style={{ marginRight: "8px" }}>Status</span>
-            <select
-              defaultValue={"draft"}
-              {...register("status", {
-                required: "This field is required",
-              })}
-            >
-              <option value="draft">Draft</option>
-              <option value="published">Published</option>
-              <option value="rejected">Rejected</option>
-            </select>
-            <span style={{ color: "red" }}>
-              {(errors as any)?.status?.message as string}
-            </span>
-          </label>
-          <div>
-            <input type="submit" value="save" />
-          </div>
-        </div>
+            <Text size="xs" color="dimmed" mt={5}>
+              Recommended size: 1200x630px (16:9 ratio)
+            </Text>
+          </Paper>
+        </Stack>
       </form>
-    </div>
+    </Create>
   );
 }

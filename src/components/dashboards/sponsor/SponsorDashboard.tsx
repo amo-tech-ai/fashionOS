@@ -1,3 +1,5 @@
+"use client";
+
 import React from 'react';
 import { Grid, Card, Title, Text, Group, Badge, Box, RingProgress, Progress, Stack, Table, Avatar } from "@mantine/core";
 import { IconTrendingUp, IconUsers, IconTargetArrow, IconCurrencyDollar, IconChartBar, IconCalendar } from "@tabler/icons";
@@ -222,4 +224,32 @@ export const SponsorDashboard = () => {
             color="blue"
             trend={15}
           />
+        </Grid.Col>        
+        <Grid.Col xs={12} sm={6} md={3}>
+          <ROIMetricCard
+            title="Conversions"
+            value={sponsorMetrics.conversions}
+            subtitle="Qualified leads"
+            icon={IconTargetArrow}
+            color="green"
+            trend={23}
+          />
         </Grid.Col>
+        
+        <Grid.Col xs={12} sm={6} md={3}>
+          <ROIMetricCard
+            title="Average ROI"
+            value="4.2x"
+            subtitle="Across all events"
+            icon={IconChartBar}
+            color="orange"
+            trend={8}
+          />
+        </Grid.Col>
+      </Grid>
+
+      {/* Additional sections would go here */}
+      {/* For now, let's close the component properly */}
+    </Box>
+  );
+};

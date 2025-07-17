@@ -1,5 +1,5 @@
-import React from 'react';
-import { Navigate } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import { useAuth } from '@/contexts/AuthContext';
 import { AdminDashboard } from '../admin/AdminDashboard';
 import { OrganizerDashboard } from '../organizer/OrganizerDashboard';
@@ -10,6 +10,13 @@ import { Loader, Text, Center, Box } from '@mantine/core';
 
 export const DashboardRouter: React.FC = () => {
   const { user, userRole, isLoading, isAuthenticated } = useAuth();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (!isLoading && !isAuthenticated) {
+      router.push('/login');
+    }
+  }, [isLoading, isAuthenticated, router]);
 
   if (isLoading) {
     return (
@@ -23,7 +30,7 @@ export const DashboardRouter: React.FC = () => {
   }
 
   if (!isAuthenticated) {
-    return <Navigate to="/login" replace />;
+    return null; // Redirect handled in useEffect
   }
 
   // Route to appropriate dashboard based on user role

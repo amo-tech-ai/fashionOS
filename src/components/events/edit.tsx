@@ -1,82 +1,134 @@
 "use client";
 
+import { useForm, useSelect } from "@refinedev/mantine";
 import { Edit } from "@refinedev/mantine";
 import { 
   TextInput, 
   Textarea, 
   NumberInput, 
   Select, 
-  DateInput,
-  TimeInput,
   Group,
   Stack,
   Grid,
   Title,
-  Text,
   Paper,
-  Divider,
   Switch,
   MultiSelect,
-  Badge,
-  Box
+  Box,
+  Loader,
+  Center
 } from "@mantine/core";
-import { useForm } from "@refinedev/mantine";
-import { IconCalendarEvent, IconMapPin, IconUsers, IconCoin, IconPhoto } from "@tabler/icons-react";
+import { DatePicker, TimeInput } from "@mantine/dates";
+import { 
+  IconCalendarEvent, 
+  IconMapPin, 
+  IconUsers, 
+  IconCoin,
+  IconTag,
+  IconBuilding,
+  IconUser
+} from "@tabler/icons-react";
+import { useParams } from "next/navigation";
 
 export const EventEdit = () => {
+  const params = useParams();
+  const id = params?.id as string;
+
   const {
     getInputProps,
     saveButtonProps,
     setFieldValue,
-    refineCore: { queryResult },
     errors,
+    refineCore: { queryResult, formLoading },
   } = useForm({
+    refineCoreProps: {
+      resource: "events",
+      id: id,
+      action: "edit",
+    },
     initialValues: {
       title: "",
       description: "",
+      event_date: null,
+      event_time: "",
       location: "",
-      date: new Date(),
-      time: "",
-      capacity: 0,
-      ticket_price: 0,
-      is_featured: false,
-      event_type: "",
-      status: "draft",
-      organizer_id: "",
       venue_id: "",
-      designers: [],
-      models: [],
-      sponsors: [],
+      organizer_id: "",
+      target_attendance: 0,
+      current_attendance: 0,
+      ticket_price: 0,
+      status: "draft",
+      event_type: "",
+      is_featured: false,
       tags: [],
       image_url: "",
+      registration_link: "",
+    },
+    transformValues: (values) => {
+      return {
+        ...values,
+        event_date: values.event_date ? new Date(values.event_date).toISOString() : null,
+        tags: values.tags || [],
+      };
     },
     validate: {
-      title: (value) => (value.length < 3 ? "Title must be at least 3 characters" : null),
+      title: (value) => {
+        if (!value || value.length < 3) {
+          return "Title must be at least 3 characters";
+        }
+        return null;
+      },
       location: (value) => (!value ? "Location is required" : null),
-      capacity: (value) => (value < 1 ? "Capacity must be at least 1" : null),
-      ticket_price: (value) => (value < 0 ? "Price cannot be negative" : null),
+      event_date: (value) => (!value ? "Event date is required" : null),
+      target_attendance: (value) => {
+        if (!value || value < 1) {
+          return "Target attendance must be at least 1";
+        }
+        return null;
+      },
+      ticket_price: (value) => {
+        if (value < 0) {
+          return "Ticket price cannot be negative";
+        }
+        return null;
+      },
     },
   });
+
+  // Venue select
+  const { selectProps: venueSelectProps } = useSelect({
+    resource: "venues",
+    optionLabel: "name",
+    optionValue: "id",
+    defaultValue: queryResult?.data?.data?.venue_id,
+  });
+
+  // Loading state
+  if (formLoading) {
+    return (
+      <Center h={400}>
+        <Loader size="lg" />
+      </Center>
+    );
+  }
 
   const eventData = queryResult?.data?.data;
 
   return (
-    <Edit saveButtonProps={saveButtonProps}>
+    <Edit 
+      saveButtonProps={saveButtonProps}
+      title={`Edit Event: ${eventData?.title || ''}`}
+    >
       <form>
         <Stack spacing="xl">
           {/* Basic Information */}
           <Paper p="md" radius="md" withBorder>
-            <Group position="apart" mb="md">
-              <Title order={4}>
-                <Group spacing="xs">
-                  <IconCalendarEvent size={20} />
-                  Basic Information
-                </Group>
-              </Title>
-              <Badge color={eventData?.status === 'published' ? 'green' : 'gray'}>
-                {eventData?.status || 'Draft'}
-              </Badge>
-            </Group>
+            <Title order={4} mb="md">
+              <Group spacing="xs">
+                <IconCalendarEvent size={20} />
+                Basic Information
+              </Group>
+            </Title>
             
             <Grid>
               <Grid.Col span={12}>
@@ -85,7 +137,7 @@ export const EventEdit = () => {
                   placeholder="Fashion Week 2025"
                   {...getInputProps("title")}
                   error={errors.title}
-                  required
+                  withAsterisk
                 />
               </Grid.Col>
               
@@ -94,6 +146,8 @@ export const EventEdit = () => {
                   label="Description"
                   placeholder="Describe your fashion event..."
                   minRows={4}
+                  maxRows={8}
+                  autosize
                   {...getInputProps("description")}
                 />
               </Grid.Col>
@@ -108,7 +162,11 @@ export const EventEdit = () => {
                     { value: "gala", label: "Fashion Gala" },
                     { value: "popup", label: "Pop-up Show" },
                     { value: "workshop", label: "Design Workshop" },
+                    { value: "tradeshow", label: "Trade Show" },
+                    { value: "conference", label: "Fashion Conference" },
+                    { value: "other", label: "Other" },
                   ]}
+                  searchable
                   {...getInputProps("event_type")}
                 />
               </Grid.Col>
@@ -125,6 +183,14 @@ export const EventEdit = () => {
                   {...getInputProps("status")}
                 />
               </Grid.Col>
+
+              <Grid.Col span={12}>
+                <TextInput
+                  label="Event Image URL"
+                  placeholder="https://example.com/event-image.jpg"
+                  {...getInputProps("image_url")}
+                />
+              </Grid.Col>
             </Grid>
           </Paper>
 
@@ -139,21 +205,37 @@ export const EventEdit = () => {
             
             <Grid>
               <Grid.Col span={12}>
+                <Select
+                  label="Venue"
+                  placeholder="Select a venue"
+                  icon={<IconBuilding size={16} />}
+                  searchable
+                  nothingFound="No venues found"
+                  {...venueSelectProps}
+                  {...getInputProps("venue_id")}
+                />
+              </Grid.Col>
+
+              <Grid.Col span={12}>
                 <TextInput
-                  label="Venue Location"
+                  label="Location Address"
                   placeholder="123 Fashion Ave, Toronto, ON"
+                  icon={<IconMapPin size={16} />}
                   {...getInputProps("location")}
                   error={errors.location}
-                  required
+                  withAsterisk
                 />
               </Grid.Col>
               
               <Grid.Col span={6}>
-                <DateInput
+                <DatePicker
                   label="Event Date"
                   placeholder="Select date"
-                  {...getInputProps("date")}
-                  required
+                  value={getInputProps("event_date").value ? new Date(getInputProps("event_date").value) : null}
+                  onChange={(value) => setFieldValue("event_date", value)}
+                  error={errors.event_date}
+                  withAsterisk
+                  minDate={new Date()}
                 />
               </Grid.Col>
               
@@ -161,22 +243,8 @@ export const EventEdit = () => {
                 <TimeInput
                   label="Start Time"
                   placeholder="19:00"
-                  {...getInputProps("time")}
-                  required
-                />
-              </Grid.Col>
-              
-              <Grid.Col span={12}>
-                <Select
-                  label="Venue"
-                  placeholder="Select venue"
-                  data={[
-                    { value: "1", label: "Toronto Convention Centre" },
-                    { value: "2", label: "Royal Ontario Museum" },
-                    { value: "3", label: "The Carlu" },
-                    { value: "4", label: "Fairmont Royal York" },
-                  ]}
-                  {...getInputProps("venue_id")}
+                  {...getInputProps("event_time")}
+                  withAsterisk
                 />
               </Grid.Col>
             </Grid>
@@ -194,12 +262,24 @@ export const EventEdit = () => {
             <Grid>
               <Grid.Col span={6}>
                 <NumberInput
-                  label="Maximum Capacity"
+                  label="Target Attendance"
                   placeholder="500"
                   min={1}
-                  {...getInputProps("capacity")}
-                  error={errors.capacity}
-                  required
+                  max={10000}
+                  icon={<IconUsers size={16} />}
+                  {...getInputProps("target_attendance")}
+                  error={errors.target_attendance}
+                  withAsterisk
+                />
+              </Grid.Col>
+
+              <Grid.Col span={6}>
+                <NumberInput
+                  label="Current Attendance"
+                  placeholder="0"
+                  min={0}
+                  icon={<IconUsers size={16} />}
+                  {...getInputProps("current_attendance")}
                 />
               </Grid.Col>
               
@@ -209,9 +289,18 @@ export const EventEdit = () => {
                   placeholder="150.00"
                   precision={2}
                   min={0}
+                  max={10000}
                   icon={<IconCoin size={16} />}
                   {...getInputProps("ticket_price")}
                   error={errors.ticket_price}
+                />
+              </Grid.Col>
+
+              <Grid.Col span={6}>
+                <TextInput
+                  label="Registration Link"
+                  placeholder="https://tickets.example.com"
+                  {...getInputProps("registration_link")}
                 />
               </Grid.Col>
               
@@ -219,91 +308,52 @@ export const EventEdit = () => {
                 <Switch
                   label="Featured Event"
                   description="Display this event prominently on the homepage"
+                  size="md"
                   {...getInputProps("is_featured", { type: "checkbox" })}
                 />
               </Grid.Col>
             </Grid>
           </Paper>
 
-          {/* Participants */}
+          {/* Tags & Categories */}
           <Paper p="md" radius="md" withBorder>
             <Title order={4} mb="md">
               <Group spacing="xs">
-                <IconUsers size={20} />
-                Participants
+                <IconTag size={20} />
+                Tags & Categories
               </Group>
             </Title>
             
-            <Stack>
-              <MultiSelect
-                label="Featured Designers"
-                placeholder="Select designers"
-                data={[
-                  { value: "1", label: "Alexander Wang" },
-                  { value: "2", label: "Vivienne Westwood" },
-                  { value: "3", label: "Marc Jacobs" },
-                  { value: "4", label: "Stella McCartney" },
-                ]}
-                {...getInputProps("designers")}
-              />
-              
-              <MultiSelect
-                label="Models"
-                placeholder="Select models"
-                data={[
-                  { value: "1", label: "Gigi Hadid" },
-                  { value: "2", label: "Kendall Jenner" },
-                  { value: "3", label: "Bella Hadid" },
-                  { value: "4", label: "Naomi Campbell" },
-                ]}
-                {...getInputProps("models")}
-              />
-              
-              <MultiSelect
-                label="Sponsors"
-                placeholder="Select sponsors"
-                data={[
-                  { value: "1", label: "Chanel" },
-                  { value: "2", label: "Louis Vuitton" },
-                  { value: "3", label: "Gucci" },
-                  { value: "4", label: "Prada" },
-                ]}
-                {...getInputProps("sponsors")}
-              />
-            </Stack>
-          </Paper>
-
-          {/* Media & Tags */}
-          <Paper p="md" radius="md" withBorder>
-            <Title order={4} mb="md">
-              <Group spacing="xs">
-                <IconPhoto size={20} />
-                Media & Tags
-              </Group>
-            </Title>
-            
-            <Stack>
-              <TextInput
-                label="Cover Image URL"
-                placeholder="https://example.com/event-cover.jpg"
-                {...getInputProps("image_url")}
-              />
-              
-              <MultiSelect
-                label="Event Tags"
-                placeholder="Add tags"
-                data={[
-                  { value: "runway", label: "Runway" },
-                  { value: "haute-couture", label: "Haute Couture" },
-                  { value: "ready-to-wear", label: "Ready to Wear" },
-                  { value: "sustainable", label: "Sustainable Fashion" },
-                  { value: "emerging-designers", label: "Emerging Designers" },
-                ]}
-                searchable
-                creatable
-                {...getInputProps("tags")}
-              />
-            </Stack>
+            <MultiSelect
+              label="Event Tags"
+              placeholder="Add tags to help people find your event"
+              data={[
+                { value: "runway", label: "Runway" },
+                { value: "haute-couture", label: "Haute Couture" },
+                { value: "ready-to-wear", label: "Ready to Wear" },
+                { value: "sustainable", label: "Sustainable Fashion" },
+                { value: "emerging-designers", label: "Emerging Designers" },
+                { value: "luxury", label: "Luxury Fashion" },
+                { value: "streetwear", label: "Streetwear" },
+                { value: "accessories", label: "Accessories" },
+                { value: "menswear", label: "Menswear" },
+                { value: "womenswear", label: "Womenswear" },
+                { value: "kids", label: "Kids Fashion" },
+                { value: "vintage", label: "Vintage" },
+                { value: "avant-garde", label: "Avant Garde" },
+                { value: "bridal", label: "Bridal" },
+                { value: "swimwear", label: "Swimwear" },
+                { value: "lingerie", label: "Lingerie" },
+                { value: "footwear", label: "Footwear" },
+                { value: "jewelry", label: "Jewelry" },
+                { value: "tech-fashion", label: "Fashion Tech" },
+                { value: "metaverse", label: "Metaverse Fashion" },
+              ]}
+              searchable
+              creatable
+              getCreateLabel={(query) => `+ Create "${query}"`}
+              {...getInputProps("tags")}
+            />
           </Paper>
         </Stack>
       </form>

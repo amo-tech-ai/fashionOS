@@ -8,7 +8,6 @@ import {
   Card, 
   Group, 
   Stack,
-  RingProgress,
   SimpleGrid,
   Paper,
   Center,
@@ -17,14 +16,13 @@ import {
   Badge,
   Anchor,
   ActionIcon,
-  Timeline,
   Avatar,
   Divider,
   Alert,
-
   Flex,
   Box,
-  Button
+  Button,
+  Timeline
 } from "@mantine/core";
 import { 
   IconCalendarEvent, 
@@ -47,6 +45,14 @@ import {
 import Link from "next/link";
 import { useList } from "@refinedev/core";
 import { useState, useMemo } from "react";
+import dynamic from 'next/dynamic';
+import { WidgetErrorBoundary } from '@/components/ui/WidgetErrorBoundary';
+
+// Dynamic imports for heavy components
+const RingProgress = dynamic(
+  () => import('@mantine/core').then(mod => mod.RingProgress),
+  { ssr: false }
+);
 
 // Fashion-specific color palette
 const fashionColors = {
@@ -284,14 +290,14 @@ export default function EnhancedDashboardPage() {
       icon: IconUsers,
       label: "Manage Models",
       description: "View and coordinate model schedules",
-      href: "/models",
+      href: "/model",
       color: "pink"
     },
     {
       icon: IconBuildingStore,
       label: "Book Venue",
       description: "Reserve venues for upcoming events",
-      href: "/venues",
+      href: "/venue",
       color: "green"
     },
     {
