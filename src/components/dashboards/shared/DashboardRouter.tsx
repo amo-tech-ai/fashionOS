@@ -6,6 +6,9 @@ import { OrganizerDashboard } from '../organizer/OrganizerDashboard';
 import { SponsorDashboard } from '../sponsor/SponsorDashboard';
 import { DesignerDashboard } from '../designer/DesignerDashboard';
 import { ModelDashboard } from '../model/ModelDashboard';
+import { VenueDashboard } from '../venue/VenueDashboard';
+import { VendorDashboard } from '../vendor/VendorDashboard';
+import { MediaDashboard } from '../media/MediaDashboard';
 import { Loader, Text, Center, Box } from '@mantine/core';
 
 export const DashboardRouter: React.FC = () => {
@@ -52,28 +55,13 @@ export const DashboardRouter: React.FC = () => {
       return <ModelDashboard />;
     
     case 'venue':
-      // TODO: Return VenueDashboard when implemented
-      return (
-        <Center h="50vh">
-          <Text size="lg" color="dimmed">Venue Manager coming soon...</Text>
-        </Center>
-      );
+      return <VenueDashboard />;
     
     case 'vendor':
-      // TODO: Return VendorDashboard when implemented
-      return (
-        <Center h="50vh">
-          <Text size="lg" color="dimmed">Vendor Portal coming soon...</Text>
-        </Center>
-      );
+      return <VendorDashboard />;
     
     case 'media':
-      // TODO: Return MediaDashboard when implemented
-      return (
-        <Center h="50vh">
-          <Text size="lg" color="dimmed">Media Center coming soon...</Text>
-        </Center>
-      );
+      return <MediaDashboard />;
     
     default:
       // Default dashboard for attendees or unknown roles
