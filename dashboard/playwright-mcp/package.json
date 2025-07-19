@@ -1,0 +1,22 @@
+{
+  "name": "fashionos-playwright-mcp",
+  "version": "1.0.0",
+  "description": "Playwright MCP for FashionOS automated testing and browser control",
+  "main": "index.js",
+  "scripts": {
+    "test": "playwright test",
+    "test:headed": "playwright test --headed",
+    "test:debug": "playwright test --debug",
+    "mcp:server": "npx @playwright/mcp@latest --port 4600",
+    "mcp:headless": "npx @playwright/mcp@latest --headless --port 4600",
+    "mcp:chrome": "npx @playwright/mcp@latest --browser chrome --port 4600",
+    "record": "playwright codegen http://localhost:4572"
+  },
+  "dependencies": {
+    "@playwright/test": "^1.54.1",
+    "@playwright/mcp": "latest"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0"
+  }
+}

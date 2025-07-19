@@ -1,0 +1,75 @@
+/* Fashionistas Style Guide - Core Dark Theme */
+
+/* Essential Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Syne:wght@400;500;600&display=swap');
+
+/* Core CSS Variables */
+:root {
+  /* Colors */
+  --fashion-black: #0a0a0a;
+  --fashion-surface: #141414;
+  --fashion-text: #fafafa;
+  --fashion-muted: #a1a1aa;
+  --fashion-gold: #ffc426;
+  --fashion-border: rgba(255, 255, 255, 0.1);
+  
+  /* Typography */
+  --font-base: 'Inter', sans-serif;
+  --font-heading: 'Syne', sans-serif;
+  
+  /* Spacing */
+  --space-xs: 0.5rem;
+  --space-sm: 0.75rem;
+  --space-md: 1rem;
+  --space-lg: 1.5rem;
+  --space-xl: 2rem;
+  
+  /* Transitions */
+  --transition: all 0.3s ease;
+}
+/* Dark mode defaults */
+[data-mantine-color-scheme='dark'] {
+  --mantine-color-body: var(--fashion-black);
+  --mantine-color-text: var(--fashion-text);
+  --mantine-color-dark-filled: var(--fashion-surface);
+}
+
+/* Light mode overrides */
+[data-mantine-color-scheme='light'] {
+  --mantine-color-body: #fafafa;
+  --mantine-color-text: #0a0a0a;
+}
+
+/* Global styles */
+body {
+  font-family: var(--font-base);
+  -webkit-font-smoothing: antialiased;
+  background-color: var(--fashion-black);
+  color: var(--fashion-text);
+}
+
+/* Core typography */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading);
+  font-weight: 400;
+  margin: 0 0 var(--space-md) 0;
+}
+
+h1 {
+  font-size: clamp(2rem, 5vw, 3.5rem);
+  font-weight: 300;
+}
+
+/* Focus styles */
+:focus-visible {
+  outline: 2px solid var(--fashion-gold);
+  outline-offset: 2px;
+}
+
+/* Core utilities */
+.text-gradient {
+  background: linear-gradient(135deg, var(--fashion-gold), #ffb81c);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}

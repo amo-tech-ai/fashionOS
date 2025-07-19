@@ -1,0 +1,72 @@
+{
+  "name": "fashionos",
+  "version": "0.1.0",
+  "private": true,
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "scripts": {
+    "dev": "cross-env NODE_OPTIONS=--max_old_space_size=4096 refine dev",
+    "build": "refine build",
+    "start": "refine start",
+    "lint": "next lint",
+    "refine": "refine",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:e2e": "playwright test",
+    "typecheck": "tsc --noEmit",
+    "health": "node scripts/health-check.js"
+  },
+  "dependencies": {
+    "@emotion/react": "^11.11.0",
+    "@mantine/core": "^5.10.5",
+    "@mantine/dates": "^5.10.5",
+    "@mantine/form": "^5.10.5",
+    "@mantine/hooks": "^5.10.5",
+    "@mantine/notifications": "^5.10.5",
+    "@refinedev/core": "^4.57.10",
+    "@refinedev/mantine": "^2.36.2",
+    "@refinedev/nextjs-router": "^6.0.0",
+    "@refinedev/react-hook-form": "^4.10.2",
+    "@refinedev/react-table": "^5.6.6",
+    "@refinedev/supabase": "^5.7.4",
+    "@supabase/ssr": "^0.3.0",
+    "@supabase/supabase-js": "^2.39.0",
+    "@tabler/icons-react": "^3.14.0",
+    "@tanstack/react-table": "^8.2.6",
+    "dayjs": "^1.11.10",
+    "js-cookie": "^3.0.5",
+    "next": "^14.1.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-error-boundary": "^6.0.0",
+    "recharts": "^3.1.0"
+  },
+  "devDependencies": {
+    "@axe-core/react": "^4.10.2",
+    "@playwright/test": "^1.40.0",
+    "@refinedev/cli": "^2.16.21",
+    "@refinedev/devtools": "^1.1.32",
+    "@refinedev/inferencer": "^5.1.1",
+    "@testing-library/jest-dom": "^6.1.5",
+    "@testing-library/react": "^14.1.2",
+    "@types/jest": "^30.0.0",
+    "@types/js-cookie": "^3.0.6",
+    "@types/node": "^20.0.0",
+    "@types/react": "^18.2.0",
+    "@types/react-dom": "^18.2.0",
+    "@typescript-eslint/parser": "^8.37.0",
+    "cross-env": "^7.0.3",
+    "eslint": "^8",
+    "eslint-config-next": "^14.1.0",
+    "jest": "^29.7.0",
+    "jest-axe": "^10.0.0",
+    "jest-environment-jsdom": "^29.7.0",
+    "jest-environment-node": "^30.0.4",
+    "prettier": "^3.6.2",
+    "typescript": "^5.3.0"
+  },
+  "refine": {
+    "projectId": "uMW5Qq-paqJCq-BpOJx8"
+  }
+}

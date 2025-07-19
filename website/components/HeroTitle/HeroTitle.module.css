@@ -1,0 +1,170 @@
+.wrapper {
+  position: relative;
+  min-height: 90vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #000000;
+  overflow: hidden;
+
+  /* Subtle gradient overlay */
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: radial-gradient(ellipse at center top, rgba(147, 51, 234, 0.15) 0%, transparent 50%),
+                radial-gradient(ellipse at center bottom, rgba(219, 39, 119, 0.1) 0%, transparent 50%);
+    pointer-events: none;
+  }
+
+  @media (max-width: $mantine-breakpoint-sm) {
+    min-height: 80vh;
+  }
+}
+
+.overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(180deg, 
+    rgba(0, 0, 0, 0.4) 0%, 
+    rgba(0, 0, 0, 0.6) 50%, 
+    rgba(0, 0, 0, 0.8) 100%
+  );
+  z-index: 1;
+}
+
+.inner {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  padding: rem(40px) rem(20px);
+}
+
+.teaseLine {
+  color: rgba(255, 255, 255, 0.7);
+  letter-spacing: rem(3px);
+  margin-bottom: rem(24px);
+  animation: fadeInUp 0.8s ease-out;
+}
+
+.title {
+  font-family: var(--mantine-font-family-headings);
+  font-weight: 200;
+  font-size: rem(88px);
+  line-height: 1;
+  letter-spacing: rem(-3px);
+  color: var(--mantine-color-white);
+  margin-bottom: rem(32px);
+  animation: fadeInUp 1s ease-out 0.2s both;
+
+  @media (max-width: $mantine-breakpoint-md) {
+    font-size: rem(64px);
+  }
+
+  @media (max-width: $mantine-breakpoint-sm) {
+    font-size: rem(48px);
+    letter-spacing: rem(-2px);
+  }
+}
+
+.yearAccent {
+  background: linear-gradient(135deg, #db2777 0%, #9333ea 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  font-weight: 300;
+}
+
+.description {
+  font-size: rem(28px);
+  font-weight: 300;
+  color: rgba(255, 255, 255, 0.85);
+  margin-bottom: rem(48px);
+  max-width: rem(700px);
+  margin-left: auto;
+  margin-right: auto;
+  animation: fadeInUp 1.2s ease-out 0.4s both;
+
+  @media (max-width: $mantine-breakpoint-sm) {
+    font-size: rem(20px);
+    margin-bottom: rem(32px);
+  }
+}
+
+.controls {
+  justify-content: center;
+  gap: rem(24px);
+  animation: fadeInUp 1.4s ease-out 0.6s both;
+
+  @media (max-width: $mantine-breakpoint-sm) {
+    flex-direction: column;
+    width: 100%;
+    gap: rem(16px);
+  }
+}
+
+.primaryControl {
+  height: rem(60px);
+  padding-left: rem(40px);
+  padding-right: rem(40px);
+  font-size: rem(16px);
+  font-weight: 500;
+  background: linear-gradient(135deg, #db2777 0%, #9333ea 100%);
+  border: none;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: rem(1px);
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 30px rgba(219, 39, 119, 0.3);
+  }
+
+  @media (max-width: $mantine-breakpoint-sm) {
+    width: 100%;
+    height: rem(54px);
+  }
+}
+
+.secondaryControl {
+  height: rem(60px);
+  padding-left: rem(40px);
+  padding-right: rem(40px);
+  font-size: rem(16px);
+  font-weight: 500;
+  color: var(--mantine-color-white);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  background: transparent;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: rem(1px);
+
+  &:hover {
+    transform: translateY(-2px);
+    border-color: rgba(255, 255, 255, 0.5);
+    background: rgba(255, 255, 255, 0.05);
+  }
+
+  @media (max-width: $mantine-breakpoint-sm) {
+    width: 100%;
+    height: rem(54px);
+  }
+}
+
+/* Animations */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

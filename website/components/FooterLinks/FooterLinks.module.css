@@ -1,0 +1,198 @@
+.footer {
+  background: linear-gradient(135deg, #1a1a1a 0%, #2d1b2f 100%);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  padding-top: 60px;
+  margin-top: 0;
+}
+
+.inner {
+  padding-bottom: 40px;
+}
+
+.logoImage {
+  display: block;
+  max-height: 100%;
+  width: auto;
+}
+
+.logo {
+  background: linear-gradient(135deg, #ff6b9d, #c44569);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-size: 24px;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+}
+
+.tagline {
+  max-width: 280px;
+  line-height: 1.5;
+  margin-top: 8px;
+}
+
+.socialGroup {
+  margin-top: 16px;
+}
+
+.socialIcon {
+  transition: all 0.3s ease;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.socialIcon:hover {
+  background: rgba(255, 107, 157, 0.2);
+  border-color: rgba(255, 107, 157, 0.4);
+  transform: translateY(-2px);
+}
+
+.ctaButton {
+  margin-top: 12px;
+  background: linear-gradient(135deg, #ff6b9d, #c44569);
+  border: none;
+  transition: all 0.3s ease;
+  max-width: 140px;
+}
+
+.ctaButton:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(255, 107, 157, 0.3);
+}
+
+.navigationColumn {
+  padding-left: 20px;
+}
+
+.columnTitle {
+  color: white;
+  margin-bottom: 16px;
+  font-weight: 600;
+}
+
+.navLink {
+  transition: all 0.3s ease;
+  text-decoration: none;
+  padding: 4px 0;
+  display: block;
+}
+
+.navLink:hover {
+  color: #ff6b9d !important;
+  padding-left: 8px;
+}
+
+.subscriptionForm {
+  margin-top: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.emailInput input {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: white;
+}
+
+.emailInput input::placeholder {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.emailInput input:focus {
+  border-color: #ff6b9d;
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.subscribeButton {
+  background: linear-gradient(135deg, #ff6b9d, #c44569);
+  border: none;
+  transition: all 0.3s ease;
+}
+
+.subscribeButton:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(255, 107, 157, 0.3);
+}
+
+.contactInfo {
+  margin-top: 24px;
+}
+
+.contactItem {
+  align-items: center;
+}
+
+.bottomBar {
+  background: rgba(0, 0, 0, 0.3);
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  padding: 16px 0;
+  margin-top: 40px;
+}
+
+.bottomLink {
+  transition: color 0.3s ease;
+  text-decoration: none;
+}
+
+.bottomLink:hover {
+  color: #ff6b9d !important;
+}
+
+/* Mobile Responsiveness - Keep 3 columns but adjust spacing */
+@media (max-width: 768px) {
+  .footer {
+    padding-top: 40px;
+    margin-top: 80px;
+  }
+  
+  .inner {
+    padding-bottom: 30px;
+  }
+  
+  .navigationColumn {
+    padding-left: 0;
+    margin-top: 0;
+  }
+  
+  .socialGroup {
+    justify-content: flex-start;
+  }
+  
+  .subscriptionForm {
+    max-width: 100%;
+  }
+  
+  .tagline {
+    max-width: 100%;
+    font-size: 12px;
+  }
+  
+  .columnTitle {
+    font-size: 12px;
+    margin-bottom: 8px;
+  }
+  
+  .navLink {
+    font-size: 12px;
+    padding: 2px 0;
+  }
+  
+  .contactInfo p {
+    font-size: 10px;
+  }
+  
+  .emailInput {
+    font-size: 11px;
+  }
+  
+  .subscribeButton {
+    font-size: 11px;
+    padding: 6px 12px;
+  }
+  
+  .ctaButton {
+    font-size: 11px;
+    max-width: 100px;
+  }
+}
