@@ -1,0 +1,57 @@
+{
+  "name": "fashionos",
+  "version": "0.1.0",
+  "private": true,
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "scripts": {
+    "dev": "cross-env NODE_OPTIONS=--max_old_space_size=4096 refine dev",
+    "build": "refine build",
+    "start": "refine start",
+    "lint": "next lint",
+    "refine": "refine"
+  },
+  "dependencies": {
+    "@emotion/react": "^11.14.0",
+    "@mantine/charts": "^8.1.3",
+    "@mantine/core": "^5.10.5",
+    "@mantine/dates": "^8.1.3",
+    "@mantine/form": "^5.10.5",
+    "@mantine/hooks": "^5.10.5",
+    "@mantine/notifications": "^5.10.5",
+    "@refinedev/cli": "^2.16.21",
+    "@refinedev/core": "^4.47.1",
+    "@refinedev/devtools": "^1.1.32",
+    "@refinedev/inferencer": "^5.1.1",
+    "@refinedev/kbar": "^1.3.6",
+    "@refinedev/mantine": "^2.36.2",
+    "@refinedev/nextjs-router": "^6.0.0",
+    "@refinedev/react-hook-form": "^4.8.14",
+    "@refinedev/react-table": "^5.6.6",
+    "@refinedev/supabase": "^5.7.4",
+    "@supabase/ssr": "^0.3.0",
+    "@supabase/supabase-js": "^2.51.0",
+    "@tabler/icons-react": "^3.34.0",
+    "@tanstack/react-table": "^8.2.6",
+    "dayjs": "^1.11.13",
+    "js-cookie": "^3.0.5",
+    "next": "^14.1.0",
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0"
+  },
+  "devDependencies": {
+    "@types/js-cookie": "^3.0.6",
+    "@types/node": "^18.16.2",
+    "@types/react": "^18.0.0",
+    "@types/react-dom": "^18.0.0",
+    "@typescript-eslint/parser": "^6.21.0",
+    "cross-env": "^7.0.3",
+    "eslint": "^8",
+    "eslint-config-next": "^14.1.0",
+    "typescript": "^5.4.2"
+  },
+  "refine": {
+    "projectId": "uMW5Qq-paqJCq-BpOJx8"
+  }
+}

@@ -1,0 +1,361 @@
+"use client";
+
+import "@/styles/global.css";
+import { 
+  MantineProvider, 
+  AppShell, 
+  Header, 
+  Text, 
+  Burger, 
+  MediaQuery, 
+  useMantineTheme,
+  Navbar,
+  NavLink,
+  Group,
+  ThemeIcon,
+  UnstyledButton,
+  Box,
+  Divider,
+  Badge,
+  Container,
+  Anchor
+} from "@mantine/core";
+import { Refine } from "@refinedev/core";
+import { RefineKbar, RefineKbarProvider } from "@refinedev/kbar";
+import routerProvider from "@refinedev/nextjs-router";
+import { dataProvider, liveProvider } from "@refinedev/supabase";
+import { supabaseClient } from "@/utility/supabaseClient";
+import authProvider from "@/authProvider";
+import { useState, Suspense } from "react";
+import Link from "next/link";
+import { usePathname } from 'next/navigation';
+import {
+  IconDashboard,
+  IconCalendarEvent,
+  IconArticle,
+  IconCategory,
+  IconSettings,
+  IconLogout,
+  IconBrandTabler
+} from '@tabler/icons-react';
+
+// Loading component
+function LoadingSpinner() {
+  return <div>Loading...</div>;
+}
+
+// Wrapper component for layout content
+function LayoutContent({ children }: { children: React.ReactNode }) {
+  const [opened, setOpened] = useState(false);
+  const theme = useMantineTheme();
+  const pathname = usePathname();
+
+  const navLinks = [
+    { icon: IconDashboard, label: "Dashboard", href: "/" },
+    { icon: IconCalendarEvent, label: "Events", href: "/events" },
+    { icon: IconArticle, label: "Blog Posts", href: "/blog-posts" },
+    { icon: IconCategory, label: "Categories", href: "/categories" },
+  ];
+
+  return (
+    <MantineProvider
+      theme={{
+        primaryColor: "blue",
+        colorScheme: "light",
+      }}
+      withNormalizeCSS
+      withGlobalStyles
+    >
+      <RefineKbarProvider>
+        <Refine
+          routerProvider={routerProvider}
+          dataProvider={dataProvider(supabaseClient)}
+          liveProvider={liveProvider(supabaseClient)}
+          authProvider={authProvider}
+          resources={[
+            {
+              name: "events",
+              list: "/events",
+              create: "/events/create",
+              edit: "/events/edit/:id",
+              show: "/events/:id",
+            },
+            {
+              name: "blog_posts",
+              list: "/blog-posts",
+              create: "/blog-posts/create", 
+              edit: "/blog-posts/edit/:id",
+              show: "/blog-posts/:id",
+            },
+            {
+              name: "categories",
+              list: "/categories",
+              create: "/categories/create",
+              edit: "/categories/edit/:id",
+            },
+          ]}
+          options={{
+            syncWithLocation: true,
+            warnWhenUnsavedChanges: true,
+          }}
+        >
+          <Box style={{ minHeight: "100vh", display: "flex", flexDirection: "column" }}>
+            <AppShell
+              navbarOffsetBreakpoint="sm"
+              asideOffsetBreakpoint="sm"
+              navbar={
+                <Navbar p="md" hiddenBreakpoint="sm" hidden={!opened} width={{ sm: 250, lg: 280 }}>
+                  <Navbar.Section grow>
+                    <Group position="center" mb="lg">
+                      <ThemeIcon size="xl" radius="md" variant="light">
+                        <IconBrandTabler size={18} />
+                      </ThemeIcon>
+                      <Text size="xl" weight={700} color="blue.6">
+                        FashionOS
+                      </Text>
+                    </Group>
+                    
+                    <Divider mb="md" />
+                    
+                    {navLinks.map((link) => {
+                      const IconComponent = link.icon;
+                      const isActive = pathname === link.href;
+                      
+                      return (
+                        <UnstyledButton
+                          key={link.href}
+                          component={Link}
+                          href={link.href}
+                          style={{ width: '100%', textDecoration: 'none' }}
+                          mb={4}
+                        >
+                          <Box
+                            sx={(theme) => ({
+                              display: 'flex',
+                              alignItems: 'center',
+                              width: '100%',
+                              padding: theme.spacing.md,
+                              borderRadius: theme.radius.md,
+                              backgroundColor: isActive ? theme.colors.blue[0] : 'transparent',
+                              color: isActive ? theme.colors.blue[7] : theme.colors.gray[7],
+                              fontSize: theme.fontSizes.sm,
+                              fontWeight: isActive ? 600 : 400,
+                              '&:hover': {
+                                backgroundColor: theme.colors.gray[0],
+                              },
+                            })}
+                          >
+                            <ThemeIcon
+                              variant={isActive ? "light" : "outline"}
+                              color={isActive ? "blue" : "gray"}
+                              size={30}
+                              radius="md"
+                              mr="sm"
+                            >
+                              <IconComponent size={16} />
+                            </ThemeIcon>
+                            <Text>{link.label}</Text>
+                            {isActive && (
+                              <Badge ml="auto" size="xs" color="blue">
+                                Current
+                              </Badge>
+                            )}
+                          </Box>
+                        </UnstyledButton>
+                      );
+                    })}
+                  </Navbar.Section>
+                  
+                  <Navbar.Section>
+                    <Divider mb="md" />
+                    <UnstyledButton
+                      style={{ width: '100%' }}
+                      p="md"
+                      sx={(theme) => ({
+                        display: 'flex',
+                        alignItems: 'center',
+                        borderRadius: theme.radius.md,
+                        '&:hover': {
+                          backgroundColor: theme.colors.gray[0],
+                        },
+                      })}
+                    >
+                      <ThemeIcon variant="outline" color="gray" size={30} radius="md" mr="sm">
+                        <IconSettings size={16} />
+                      </ThemeIcon>
+                      <Text size="sm" color="gray.7">Settings</Text>
+                    </UnstyledButton>
+                    <UnstyledButton
+                      style={{ width: '100%' }}
+                      p="md"
+                      sx={(theme) => ({
+                        display: 'flex',
+                        alignItems: 'center',
+                        borderRadius: theme.radius.md,
+                        color: theme.colors.red[6],
+                        '&:hover': {
+                          backgroundColor: theme.colors.red[0],
+                        },
+                      })}
+                    >
+                      <ThemeIcon variant="outline" color="red" size={30} radius="md" mr="sm">
+                        <IconLogout size={16} />
+                      </ThemeIcon>
+                      <Text size="sm">Logout</Text>
+                    </UnstyledButton>
+                  </Navbar.Section>
+                </Navbar>
+              }
+              header={
+                <Header height={{ base: 60, md: 70 }} p="md">
+                  <div style={{ display: 'flex', alignItems: 'center', height: '100%' }}>
+                    <MediaQuery largerThan="sm" styles={{ display: 'none' }}>
+                      <Burger
+                        opened={opened}
+                        onClick={() => setOpened((o) => !o)}
+                        size="sm"
+                        color={theme.colors.gray[6]}
+                        mr="xl"
+                      />
+                    </MediaQuery>
+
+                    <Container size="xl" style={{ flex: 1 }}>
+                      <Group position="apart">
+                        <MediaQuery smallerThan="sm" styles={{ display: 'none' }}>
+                          <Group>
+                            <ThemeIcon size="lg" radius="md" variant="light">
+                              <IconBrandTabler size={20} />
+                            </ThemeIcon>
+                            <Text size="lg" weight={700} color="blue.6">
+                              FashionOS
+                            </Text>
+                          </Group>
+                        </MediaQuery>
+                        
+                        <Group>
+                          <Badge variant="light" color="green" size="sm">
+                            Live
+                          </Badge>
+                          <Text size="sm" color="gray.6">
+                            Fashion Event Management
+                          </Text>
+                        </Group>
+                      </Group>
+                    </Container>
+                  </div>
+                </Header>
+              }
+              style={{ flex: 1 }}
+            >
+              <Container size="xl" p="md" style={{ flex: 1 }}>
+                {children}
+              </Container>
+            </AppShell>
+            
+            {/* Footer Component */}
+            <Box
+              component="footer"
+              style={{
+                backgroundColor: "var(--mantine-color-gray-0)",
+                borderTop: "1px solid var(--mantine-color-gray-3)",
+                marginTop: "auto",
+                padding: "var(--mantine-spacing-xl) 0",
+              }}
+            >
+              <Container size="xl">
+                <Group position="apart" align="flex-start">{/* removed wrap prop */}
+                  {/* Brand Section */}
+                  <Box style={{ flex: "1", minWidth: "250px" }}>
+                    <Text size="lg" weight={600} color="dark" mb="xs">
+                      FashionOS
+                    </Text>
+                    <Text size="sm" color="dimmed" style={{ maxWidth: "300px" }} mb="md">
+                      Canada&apos;s premier fashion event management platform. 
+                      Streamlining runway shows, fashion weeks, and industry events across North America.
+                    </Text>
+                  </Box>
+
+                  {/* Quick Links */}
+                  <Box style={{ flex: "1", minWidth: "150px" }}>
+                    <Text size="sm" weight={500} color="dark" mb="xs">
+                      Platform
+                    </Text>
+                    <Anchor href="/events" size="sm" color="dimmed" style={{ display: "block", marginBottom: 4 }}>
+                      Events
+                    </Anchor>
+                    <Anchor href="/blog-posts" size="sm" color="dimmed" style={{ display: "block", marginBottom: 4 }}>
+                      Blog
+                    </Anchor>
+                    <Anchor href="/categories" size="sm" color="dimmed" style={{ display: "block" }}>
+                      Categories
+                    </Anchor>
+                  </Box>
+
+                  {/* Support */}
+                  <Box style={{ flex: "1", minWidth: "150px" }}>
+                    <Text size="sm" weight={500} color="dark" mb="xs">
+                      Support
+                    </Text>
+                    <Anchor href="/help" size="sm" color="dimmed" style={{ display: "block", marginBottom: 4 }}>
+                      Help Center
+                    </Anchor>
+                    <Anchor href="/contact" size="sm" color="dimmed" style={{ display: "block", marginBottom: 4 }}>
+                      Contact
+                    </Anchor>
+                    <Anchor href="/api-docs" size="sm" color="dimmed" style={{ display: "block" }}>
+                      API Docs
+                    </Anchor>
+                  </Box>
+                </Group>
+
+                <Divider my="lg" />
+
+                {/* Bottom Section */}
+                <Group position="apart" align="center">{/* removed wrap prop */}
+                  <Text size="xs" color="dimmed">
+                    © 2025 FashionOS. All rights reserved. Made in Canada 🇨🇦
+                  </Text>
+                  <Group spacing="md">
+                    <Anchor href="/privacy" size="xs" color="dimmed">
+                      Privacy Policy
+                    </Anchor>
+                    <Anchor href="/terms" size="xs" color="dimmed">
+                      Terms of Service
+                    </Anchor>
+                    <Anchor href="/cookies" size="xs" color="dimmed">
+                      Cookie Policy
+                    </Anchor>
+                  </Group>
+                </Group>
+              </Container>
+            </Box>
+          </Box>
+          
+          <Suspense fallback={<LoadingSpinner />}>
+            <RefineKbar />
+          </Suspense>
+        </Refine>
+      </RefineKbarProvider>
+    </MantineProvider>
+  );
+}
+
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  return (
+    <html lang="en">
+      <head>
+        <title>FashionOS - Event Management System</title>
+        <meta name="description" content="Professional fashion event management platform" />
+      </head>
+      <body>
+        <Suspense fallback={<LoadingSpinner />}>
+          <LayoutContent>{children}</LayoutContent>
+        </Suspense>
+      </body>
+    </html>
+  );
+}
