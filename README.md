@@ -1,112 +1,113 @@
-# FashionOS Development Guide
+# Fashionistas - Modern Event Management Platform
+
+## 🎨 Overview
+
+Fashionistas is a comprehensive event management platform built with modern technologies, featuring both an admin dashboard and a customer-facing website.
+
+## 🏗️ Project Structure
+
+```
+fashionistas/
+├── dashboard/          # Admin dashboard (Refine + Mantine + Supabase)
+├── website/           # Customer website (Next.js + Mantine)
+├── PLATFORM_GUIDE.md  # Platform documentation
+└── start-platform.sh  # Startup script
+```
 
 ## 🚀 Quick Start
 
+### Prerequisites
+- Node.js 18+
+- pnpm or npm
+- Supabase account
+
+### Installation
+
+1. Clone the repository:
 ```bash
-# Install dependencies
-pnpm install
-
-# Run development server
-pnpm dev
-
-# Build for production
-pnpm build
-
-# Start production server
-pnpm start
-
-# Type checking
-pnpm typecheck
-
-# Health check
-curl http://localhost:${PORT:-3000}/api/health
+git clone https://github.com/amo-tech-ai/fashionistas.git
+cd fashionistas
 ```
 
-## 📍 Port Configuration
-
-The application will auto-select an available port between 3000-3010.
-To lock a specific port, add to `.env.local`:
-
-```env
-PORT=3000
-```
-
-## 🔍 Verification Commands
-
+2. Install dependencies:
 ```bash
-# Check TypeScript errors
-pnpm typecheck
+# Dashboard
+cd dashboard
+npm install
 
-# Verify build
-pnpm build && echo "Build successful!"
-
-# Test health endpoint
-curl -s http://localhost:3000/api/health | jq
-
-# Check bundle size
-pnpm build && ls -lah .next/static/chunks
+# Website
+cd ../website
+npm install
 ```
 
-## 📊 Performance Benchmarks
-
-Run performance tests:
+3. Set up environment variables:
 ```bash
-./scripts/benchmark.sh
+# Copy example env files
+cp dashboard/.env.example dashboard/.env.local
+cp website/.env.example website/.env.local
 ```
 
-Results are saved to:
-- `lighthouse-report.html`
-- `bundle-analysis.json`
-- `PERFORMANCE.md`
-
-## 🔐 Authentication Setup
-
-User roles are automatically detected from Supabase auth:
-- `admin` - Full system access
-- `organizer` - Event management
-- `sponsor` - Sponsorship features
-- `model` - Portfolio management
-- `designer` - Collection management
-- `venue` - Venue management
-- `vendor` - Product management
-- `media` - Press features
-
-## 🧪 Testing
-
+4. Start the development servers:
 ```bash
-# Unit tests
-pnpm test
+# Option 1: Use the startup script
+./start-platform.sh
 
-# E2E tests
-pnpm test:e2e
+# Option 2: Run individually
+# Terminal 1 - Dashboard
+cd dashboard && npm run dev
 
-# Type checking
-pnpm typecheck
+# Terminal 2 - Website
+cd website && npm run dev
 ```
 
-## 📦 Deployment
+## 🌐 Access Points
 
-```bash
-# Production build
-pnpm build
+- **Admin Dashboard**: http://localhost:4572
+- **Customer Website**: http://localhost:4570
 
-# Deploy to Vercel
-vercel
+## 🛠️ Tech Stack
 
-# Deploy to custom server
-pnpm build && pnpm start
-```
+### Dashboard
+- **Framework**: Refine
+- **UI Library**: Mantine v5
+- **Backend**: Supabase
+- **Language**: TypeScript
+- **Authentication**: Supabase Auth
 
-## 🛠️ Troubleshooting
+### Website
+- **Framework**: Next.js 14
+- **UI Library**: Mantine
+- **Styling**: CSS Modules
+- **Language**: TypeScript
 
-### Port already in use
-- Check `.env.local` for PORT setting
-- Kill existing processes: `lsof -ti:3000 | xargs kill -9`
+## 📚 Documentation
 
-### TypeScript errors
-- Run `pnpm typecheck` for detailed report
-- Non-blocking warnings don't prevent build
+- [Platform Guide](./PLATFORM_GUIDE.md)
+- [Dashboard Implementation](./dashboard/IMPLEMENTATION_GUIDE.md)
+- [Dashboard Analysis](./dashboard/DASHBOARD_ANALYSIS_REPORT.md)
 
-### Missing dependencies
-- Run `pnpm install`
-- Clear cache: `rm -rf node_modules .next && pnpm install`
+## 🔒 Security
+
+- Row Level Security (RLS) enabled
+- Multi-role authentication
+- Secure API endpoints
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+## 📝 License
+
+This project is proprietary and confidential.
+
+## 🙏 Acknowledgments
+
+Built with ❤️ using:
+- [Refine](https://refine.dev)
+- [Mantine](https://mantine.dev)
+- [Supabase](https://supabase.com)
+- [Next.js](https://nextjs.org)
